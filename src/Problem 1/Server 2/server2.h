@@ -22,6 +22,7 @@ namespace broker2
             uint32_t broker_ID;
             uint64_t instrument_ID;
 
+            int port;
             WSADATA win_sock_data;
             int WSA_startup_return;
             int WSA_cleanup_return;
@@ -75,8 +76,9 @@ namespace broker2
 
         public:
 
-            explicit server(std::string f_name)
+            explicit server(std::string f_name, int port_num)
             {
+                port = port_num;
                 WSA_startup_return = WSAStartup(MAKEWORD(2,2), &win_sock_data); //WSA Version 2.2
                 if(WSA_startup_return!=0)
                 {
@@ -94,7 +96,7 @@ namespace broker2
             {
                 TCP_server.sin_family = AF_INET;
                 TCP_server.sin_addr.s_addr = inet_addr("127.0.0.1");
-                TCP_server.sin_port = htons(8080);
+                TCP_server.sin_port = htons(port);
 
                 TCP_server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
                 if(TCP_server_socket == INVALID_SOCKET)

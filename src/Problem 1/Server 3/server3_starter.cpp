@@ -4,8 +4,9 @@
 int main(int argc, char* argv[])
 {
     std::string filename = argv[1];
+    int port_num = atoi(argv[2]);
 
-    broker3::server s(filename);
+    broker3::server s(filename, port_num);
     
     s.start();
     //s.accept_connection();

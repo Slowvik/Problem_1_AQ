@@ -4,36 +4,6 @@ Server side notes:
 
 Key considerations:
     > How to format and send the data correctly.
-
-In case someone is looking for modern C++20 solution (with <bit> in standard library).
-
-Here are two nice and templated functions to convert fundamental types (like int, short, etc.) to bytes with conversion to necessary endianness:
-
-template<typename T, std::endian to_endianness = std::endian::big>
-std::vector<uint8_t> toBytes(T value)
-{
-    std::vector<uint8_t> buffer(sizeof(T));
-
-    std::copy_n(reinterpret_cast<uint8_t*>(&value), sizeof(T), buffer.begin());
-
-    if constexpr (std::endian::native != to_endianness)
-        std::reverse(buffer.begin(), buffer.end());
-
-    return buffer;
-}
-...and to convert from bytes you can use:
-
-template<typename T, std::endian from_endianness = std::endian::big>
-T fromBytes(std::vector<uint8_t> bytes)
-{
-    if constexpr (std::endian::native != from_endianness)
-        std::reverse(bytes.begin(), bytes.end());
-
-    T* buffer = reinterpret_cast<T*>(bytes.data());
-
-    return *buffer;
-}
-To keep code in this answer simple I have intentionally removed checks for mixed endianness and std::is_fundamental<T>, you can see code with these checks on my GitHub gist (Unlicense license) if you need to.
 */
 #ifndef SERVER1_H_
 #define SERVER1_H_
@@ -63,6 +33,7 @@ namespace broker1
             int WSA_startup_return;
             int WSA_cleanup_return;
 
+            int port;
             SOCKET TCP_server_socket;
             int close_socket_return;
             struct sockaddr_in TCP_server;
@@ -112,8 +83,9 @@ namespace broker1
 
         public:
 
-            explicit server(std::string f_name)
+            explicit server(std::string f_name, int port_num)
             {
+                port = port_num;
                 WSA_startup_return = WSAStartup(MAKEWORD(2,2), &win_sock_data); //WSA Version 2.2
                 if(WSA_startup_return!=0)
                 {
@@ -131,7 +103,7 @@ namespace broker1
             {
                 TCP_server.sin_family = AF_INET;
                 TCP_server.sin_addr.s_addr = inet_addr("127.0.0.1");
-                TCP_server.sin_port = htons(8000);
+                TCP_server.sin_port = htons(port);
 
                 TCP_server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
                 if(TCP_server_socket == INVALID_SOCKET)

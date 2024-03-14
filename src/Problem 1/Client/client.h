@@ -144,6 +144,13 @@ namespace client
 
         if(list_of_all_instruments[insertion_pos] == new_item)
         {
+            insertion_pos++;
+            while(insertion_pos<actual_number_of_instruments)
+            {
+                //Copy back:
+                list_of_all_instruments[insertion_pos] = list_of_all_instruments[insertion_pos+1];
+                insertion_pos++;
+            }
             return;
         } 
 
