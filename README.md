@@ -10,6 +10,7 @@ Stepwise compile instructions on Windows:
 Notes:
 1. Since we are not using STL data structures, I have used arrays with predefined sizes, assuming expected sizes of data. These sizes are declared using the #define directive at the top of the client.h file. They need to be increased if the test dataset is increased, or we will encounter errors related to reading from memory.
 2. The server side code currently contains a 1 second pause between two send() calls. This can be removed if desired.
+3. Compiling and running a server/client on Linux/MacOS/some other OS is going to require some rewriting of the code and linking the correct libraries. Both the server and client files are currently only designed to use Windows sockets.
 
 Notes on the algorithm:
 1. Currently, connecting to the servers happens sequentially during the initialisation of the client. There is a possibility to make connection asynchronous using one thread per server.
