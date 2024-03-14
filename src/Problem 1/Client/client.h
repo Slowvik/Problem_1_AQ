@@ -201,6 +201,7 @@ namespace client
                 queue_of_instruments[back++] = instrument_ID;
                 number_of_instruments_in_queue++;
                 received_buffer_size_vec[thread_ID]-=PACKET_SIZE_DEFAULT;
+                start += PACKET_SIZE_DEFAULT;
             }
 
             if(number_of_instruments_in_queue != 0)
