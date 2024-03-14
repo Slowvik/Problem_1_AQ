@@ -208,15 +208,12 @@ namespace client
             {
                 if(list_update_sema.try_acquire())
                 {
-                    if(!number_of_instruments_in_queue == 0)
-                    {
-                        heapPush(queue_of_instruments[front++]);
-                        number_of_instruments_in_queue--;
+                    heapPush(queue_of_instruments[front++]);
+                    number_of_instruments_in_queue--;
 
-                        if(number_of_instruments_in_queue == 0)
-                        {
-                            queue_empty = true;
-                        }
+                    if(number_of_instruments_in_queue == 0)
+                    {
+                        queue_empty = true;
                     }
                     list_update_sema.release();                       
                 }
