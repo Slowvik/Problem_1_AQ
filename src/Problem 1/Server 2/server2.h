@@ -7,6 +7,8 @@
 #include <assert.h>
 #include <fstream>
 #include <string>
+#include <chrono>
+#include <thread>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -183,6 +185,7 @@ namespace broker2
                             return;
                         }
                         std::cout<<"sending data successful"<<std::endl;
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     }
                 }
             }

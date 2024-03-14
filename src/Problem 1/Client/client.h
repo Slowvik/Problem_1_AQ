@@ -178,6 +178,7 @@ namespace client
             if(received_buffer_size_vec[thread_ID]==SOCKET_ERROR)
             {
                 std::cout<<"Socket error while receiving from "<<port_number_vec[thread_ID]<<std::endl;
+                break;
             }
 
             int start = 0; 
@@ -190,10 +191,6 @@ namespace client
                 if(instrument_ID == 0)
                 {
                     end_of_stream = true;
-                    if(number_of_instruments_in_queue == 0)
-                    {
-                        queue_empty = true;
-                    }
                     received_buffer_size_vec[thread_ID] = -1;
                     break;
                 }
@@ -210,17 +207,12 @@ namespace client
                 {
                     heapPush(queue_of_instruments[front++]);
                     number_of_instruments_in_queue--;
-
-                    if(number_of_instruments_in_queue == 0)
-                    {
-                        queue_empty = true;
-                    }
                     list_update_sema.release();                       
                 }
             }
             
 
-            if(end_of_stream && queue_empty)
+            if(end_of_stream && number_of_instruments_in_queue == 0)
             {
                 break;
             }
