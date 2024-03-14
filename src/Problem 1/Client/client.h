@@ -124,7 +124,7 @@ namespace client
         }            
     } 
 
-    void heapPush(int new_item)
+    void listPush(int new_item)
     {
         if(actual_number_of_instruments == 0)
         {
@@ -205,7 +205,7 @@ namespace client
             {
                 if(list_update_sema.try_acquire())
                 {
-                    heapPush(queue_of_instruments[front++]);
+                    listPush(queue_of_instruments[front++]);
                     number_of_instruments_in_queue--;
                     list_update_sema.release();                       
                 }

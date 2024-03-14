@@ -3,10 +3,10 @@
 
 int main(int argc, char* argv[])
 {
-    int server_ID = atoi(argv[1]);
+    std::string filename = argv[1];
     int port_ID = atoi(argv[2]);
 
-    server::init(server_ID, port_ID);
+    server::init(filename, port_ID);
     
     server::start();
     bool status = server::acceptConnection();

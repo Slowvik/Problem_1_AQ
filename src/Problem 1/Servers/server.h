@@ -10,6 +10,7 @@
 #include <thread>
 
 #define SERVER_NAME_BASE "server"
+#define BUFFER_SIZE_DEFAULT 20
 
 namespace server
 {
@@ -33,7 +34,7 @@ namespace server
     int bind_return;
     int listen_return;
 
-    unsigned char sender_buffer[20];//Intentionally a little larger.
+    unsigned char sender_buffer[BUFFER_SIZE_DEFAULT];//Intentionally a little larger.
     int sender_buffer_size;
     int send_return;
 
@@ -47,16 +48,15 @@ namespace server
         return false;
     }
 
-    bool pushInt4ToByteStream()//converts and places it in sender buffer
+    void pushInt4ToByteStream()//converts and places it in sender buffer
     {
         sender_buffer[0] = (broker_ID >> 24) & 0xFF;
         sender_buffer[1] = (broker_ID >> 16) & 0xFF;
         sender_buffer[2] = (broker_ID >> 8) & 0xFF;
         sender_buffer[3] = broker_ID & 0xFF;
-        return true;
     }
 
-    bool appendInt8ToByteStream()//converts and places it in sender buffer
+    void appendInt8ToByteStream()//converts and places it in sender buffer
     {
         sender_buffer[4] = (instrument_ID >> 56) & 0xFF;
         sender_buffer[5] = (instrument_ID >> 48) & 0xFF;
@@ -66,11 +66,11 @@ namespace server
         sender_buffer[9] = (instrument_ID >> 16) & 0xFF;
         sender_buffer[10] = (instrument_ID >> 8) & 0xFF;
         sender_buffer[11] = instrument_ID & 0xFF;
-        return true;
     }
 
-    void init(int s_ID, int port_num)
+    void init(std::string file_name, int port_num)
     {
+        sender_buffer_size = BUFFER_SIZE_DEFAULT;
         port_number = port_num;
         WSA_startup_return = WSAStartup(MAKEWORD(2,2), &win_sock_data); //WSA Version 2.2
         if(WSA_startup_return!=0)
@@ -80,8 +80,7 @@ namespace server
         }
         std::cout<<"WSAStartup successful"<<std::endl;
 
-        filename = SERVER_NAME_BASE+std::to_string(s_ID)+".txt";
-        file_input.open(filename.c_str(),std::ifstream::in);
+        file_input.open(file_name.c_str(),std::ifstream::in);
         sender_buffer_size = 20;
     }
 
@@ -139,17 +138,17 @@ namespace server
     {
         while(readData())
         {
-            if(pushInt4ToByteStream() && appendInt8ToByteStream())
+            pushInt4ToByteStream();
+            appendInt8ToByteStream();
+           
+            send_return = send(TCP_accepted_socket, (char*)sender_buffer, BUFFER_SIZE_DEFAULT, 0);
+            if(send_return == SOCKET_ERROR)
             {
-                send_return = send(TCP_accepted_socket, (char*)sender_buffer, sender_buffer_size, 0);
-                if(send_return == SOCKET_ERROR)
-                {
-                    std::cout<<"Send failed"<<std::endl;
-                    return;
-                }
-                std::cout<<"sending data successful"<<std::endl;
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));//To simulate real-world servers
+                std::cout<<"Send failed"<<std::endl;
+                return;
             }
+            std::cout<<"sending data successful"<<std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));//To simulate real-world servers
         }
     }
 
