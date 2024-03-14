@@ -1,0 +1,5 @@
+*.exe
+/.vscode/*
+issue_list.txt
+server.h
+server_creator.cpp
