@@ -81,7 +81,6 @@ namespace server
         std::cout<<"WSAStartup successful"<<std::endl;
 
         file_input.open(file_name.c_str(),std::ifstream::in);
-        sender_buffer_size = 20;
     }
 
     void start()
