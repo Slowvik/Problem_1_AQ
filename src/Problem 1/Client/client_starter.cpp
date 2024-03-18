@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
         std::thread th(client::threadRunner, i);
         thread_array[i] = std::move(th);
     }
-    //std::cout<<"Joining"<<std::endl;
+    
     for(int i = 0; i<brokers_num; i++)
     {
         thread_array[i].join();

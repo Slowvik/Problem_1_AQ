@@ -155,7 +155,7 @@ namespace client
         } 
 
         insertion_pos++;
-        list_of_all_instruments[insertion_pos] = new_item;       
+        list_of_all_instruments[insertion_pos] = new_item; // Insert       
         
         actual_number_of_instruments++;
     }
