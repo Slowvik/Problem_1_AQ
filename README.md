@@ -1,3 +1,5 @@
+Project was originally written in VSCode 1.87.0, compiled and run on Windows 10 with g++12.2.0. Minimum C++ version required: C++20.
+
 Stepwise compile instructions on Windows:
 1. Compile the server_creator.cpp file (in folder src/Problem 1/Servers) with "g++ server_creator.cpp -lws2_32 -o serverN" where N needs to be replaced with an integer (1, 2, 3...). Any naming scheme for servers is fine, the name does not affect the program.
 2. Generating new text files for the servers to read (if required): Navigate to  src/Problem 1/Servers and compile server_file_generator.cpp as follows: "g++ server_file_generator.cpp  -o server_file_generator". The executable takes one parameter from the command line (server ID, which is an integer). Run it so: "./server_file_generator.exe N" where N is 1, 2, 3, etc. This generates a file called serverN.txt with 100 integers in an arithmetic progression, starting from 100+N as the first integer and 100+N as the common difference. Finally, it puts the integer 0 in the last line.
